@@ -1,7 +1,6 @@
 export async function socket(io) {
-  io.use(function (socket, next) {
-    next();
-  }).on("connection", (socket) => {
+  io.on("connection", (socket) => {
+    console.log("SF");
     socket.join("room_" + socket.decoded);
 
     socket.on("test", () => {

@@ -1,17 +1,14 @@
 import express from "express";
-import { createServer } from "http";
+import { createServer } from "https";
+
 import { Server } from "socket.io";
 import cors from "cors";
+import fs from "fs";
+
 import * as signaling from "./signaling.js";
 
-async function socketInit(server) {
-  const io = new Server(server);
-  return io;
-}
-
 async function startSocketServer(server) {
-  let io = await socketInit(server);
-  await signaling.socket(io);
+  await signaling.socket(server);
 }
 
 const app = express();
@@ -24,14 +21,18 @@ app.use(
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
 
-const httpServer = createServer();
-const io = new Server(httpServer, {
+const options = {
+  key: fs.readFileSync("./front+3-key.pem"),
+  cert: fs.readFileSync("./front+3.pem"),
+};
+
+const httpsServer = createServer(options);
+const io = new Server(httpsServer, {
   cors: {
     origin: "*",
   },
 });
 
-httpServer.listen(9300);
-
 console.log("[ + ] enable socket io");
 let io_server = await startSocketServer(io);
+httpsServer.listen(9300);
