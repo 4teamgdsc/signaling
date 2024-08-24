@@ -18,6 +18,14 @@ export async function socket(io) {
       io.to("room_" + socket.decoded).emit("rcvData", userId, position);
     });
 
+    socket.on("dataRotation", (userId, rotation) => {
+      io.to("room_" + socket.decoded).emit("rcvDataRotation", userId, rotation);
+    });
+
+    socket.on("reset", () => {
+      users = [];
+    });
+
     socket.on("newIceCandidate", (message) => {
       io.to("room_" + socket.decoded).emit("iceCandidate", message);
     });
