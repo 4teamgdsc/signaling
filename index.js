@@ -1,5 +1,5 @@
 import express from "express";
-import { createServer } from "https";
+import { createServer } from "http";
 
 import { Server } from "socket.io";
 import cors from "cors";
@@ -21,12 +21,12 @@ app.use(
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
 
-const options = {
-  key: fs.readFileSync("./front+3-key.pem"),
-  cert: fs.readFileSync("./front+3.pem"),
-};
+// const options = {
+//   key: fs.readFileSync("./front+3-key.pem"),
+//   cert: fs.readFileSync("./front+3.pem"),
+// };
 
-const httpsServer = createServer(options);
+const httpsServer = createServer();
 const io = new Server(httpsServer, {
   cors: {
     origin: "*",
